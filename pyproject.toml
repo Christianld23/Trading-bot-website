@@ -1,0 +1,13 @@
+﻿[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+select = ["E","F","I","UP","B","C90"]
+ignore = ["E501"]  # we already manage line length via black
+exclude = ["venv"," .venv","build","dist","__pycache__"]
+
+[tool.ruff.format]
+quote-style = "double"
