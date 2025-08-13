@@ -1,10 +1,11 @@
-import streamlit as st
-import pandas as pd
-import yfinance as yf
-import requests
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
+
+import pandas as pd
+import requests
+import streamlit as st
+import yfinance as yf
 
 # Page configuration
 st.set_page_config(
@@ -102,7 +103,7 @@ def load_data():
     """Load portfolio data from JSON file"""
     if os.path.exists(DATA_FILE):
         try:
-            with open(DATA_FILE, 'r') as f:
+            with open(DATA_FILE) as f:
                 data = json.load(f)
             
             # Convert string dates back to datetime objects
@@ -200,7 +201,7 @@ def create_summary_guidance(monthly_income, cash_on_hand, real_estate_pct, total
         elif months_to_down_payment <= 24:
             guidance = f"You're **{months_to_down_payment:.1f} months** away from your next real estate milestone."
         else:
-            guidance = f"Consider increasing your real estate allocation to reach property goals faster."
+            guidance = "Consider increasing your real estate allocation to reach property goals faster."
     
     # Portfolio performance guidance
     elif total_core_pnl > 0:

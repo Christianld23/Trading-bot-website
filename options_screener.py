@@ -1,7 +1,8 @@
-import streamlit as st
+from datetime import datetime
+
 import pandas as pd
+import streamlit as st
 import yfinance as yf
-from datetime import datetime, timedelta
 
 # Page configuration
 st.set_page_config(
