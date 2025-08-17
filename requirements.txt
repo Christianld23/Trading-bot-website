@@ -1,4 +1,6 @@
 streamlit
-yfinance
 pandas
-pyyaml 
+numpy
+yfinance
+pyyaml
+requests 
