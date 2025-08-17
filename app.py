@@ -14,14 +14,24 @@ def inject_galaxy_theme():
                     linear-gradient(180deg, #0b0f1c 0%, #070a12 100%);
         color: #E6EAF2;
       }
-      [data-testid="stAppViewContainer"], .block-container { background: transparent !important; }
-      .stApp::before {
-        content:""; position:fixed; inset:0; pointer-events:none; z-index:-1;
-        background-image:
-          radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0) 100%),
-          radial-gradient(1.6px 1.6px at 70% 10%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 100%),
-          radial-gradient(1.2px 1.2px at 40% 80%, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 100%),
-          radial-gradient(1.8px 1.8px at 85% 70%, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 100%);
+
+      /* remove white padding and margins */
+      [data-testid="stAppViewContainer"] {
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .block-container {
+        padding: 1rem 2rem 2rem 2rem !important;
+        margin: 0 auto !important;
+        background: transparent !important;
+      }
+
+      /* also remove sidebar white bg */
+      [data-testid="stSidebar"] {
+        background: rgba(10, 15, 25, 0.85) !important;
+        backdrop-filter: blur(8px);
+        color: #E6EAF2;
       }
     </style>
     """, unsafe_allow_html=True)
