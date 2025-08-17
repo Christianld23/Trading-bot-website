@@ -1,11 +1,39 @@
-DEFAULT_TICKERS:
-  - AAPL
-  - SPY
-  - QQQ
-  - TSLA
+universe:
+  - PLTR
+  - CRWD
+  - BTC-USD
+  - XRP-USD
 
-BUY_THRESHOLDS:
-  AAPL: 150.0
-  SPY: 400.0
-  QQQ: 350.0
-  TSLA: 200.0
+allocations:
+  long_term_pct: 40
+
+weights:
+  PLTR: 0.40
+  CRWD: 0.30
+  BTC-USD: 0.20
+  XRP-USD: 0.10
+
+risk:
+  max_position_pct: 0.25
+  max_buy_usd: 2500
+  min_cash_reserve_usd: 5000
+
+sop:
+  pltr:
+    buy_if:
+      - type: price_above_sma
+        window: 50
+  crwd:
+    buy_if:
+      - type: price_above_sma
+        window: 50
+  btc_usd:
+    buy_if:
+      - type: rsi_below
+        window: 14
+        threshold: 35
+  xrp_usd:
+    buy_if:
+      - type: rsi_below
+        window: 14
+        threshold: 35

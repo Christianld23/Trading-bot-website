@@ -1,81 +1,50 @@
-import importlib
+# app.py
+
 import streamlit as st
+import importlib
 
-st.set_page_config(page_title="Capital Allocator", layout="wide")
-
-# --- Galaxy theme (kept minimal so it won't break) ---
-def inject_galaxy_theme():
-    st.markdown("""
+# ----- GLOBAL STYLING -----
+st.markdown(
+    """
     <style>
-      .stApp {
-        background: radial-gradient(1200px 600px at 10% 10%, #0b0f1c 0%, #0b0f1c 30%, #0a0d18 60%, #070a12 100%),
-                    radial-gradient(900px 500px at 90% 20%, rgba(24,31,55,0.9) 0%, rgba(7,10,18,0.0) 60%),
-                    radial-gradient(700px 400px at 30% 90%, rgba(58,20,87,0.5) 0%, rgba(7,10,18,0.0) 60%),
-                    linear-gradient(180deg, #0b0f1c 0%, #070a12 100%);
-        color: #E6EAF2;
-      }
+    /* Galaxy gradient background with subtle stars */
+    .stApp {
+        background: radial-gradient(circle at top left, #0b0c10, #1f2833, #0b0c10);
+        color: white;
+    }
 
-      /* remove white padding and margins */
-      [data-testid="stAppViewContainer"] {
-        background: transparent !important;
-        padding: 0 !important;
-        margin: 0 !important;
-      }
-      .block-container {
-        padding: 1rem 2rem 2rem 2rem !important;
-        margin: 0 auto !important;
-        background: transparent !important;
-      }
+    /* Star sprinkle effect */
+    .stApp::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: transparent url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+        opacity: 0.2;
+        z-index: -1;
+    }
 
-      /* also remove sidebar white bg */
-      [data-testid="stSidebar"] {
-        background: rgba(10, 15, 25, 0.85) !important;
-        backdrop-filter: blur(8px);
-        color: #E6EAF2;
-      }
+    /* Make subheaders gold */
+    h2, h3, h4 {
+        color: #FFD700 !important;
+    }
+
+    /* Keep main big headers white for contrast */
+    h1 {
+        color: white !important;
+    }
     </style>
-    """, unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True
+)
 
-inject_galaxy_theme()
+# ----- NORMAL TAB LOGIC -----
+tabs = st.tabs(["Dashboard", "Crystal Ball"])
 
-# --- Safe import helpers ---
-def import_or_none(module_name, func_name):
-    try:
-        mod = importlib.import_module(module_name)
-        fn = getattr(mod, func_name, None)
-        return fn
-    except Exception as e:
-        st.sidebar.warning(f"Module '{module_name}' not loaded: {e}")
-        return None
+with tabs[0]:
+    st.title("📊 Dashboard")
+    st.write("Your normal dashboard goes here.")
 
-# Try to load optional tabs; don't crash if missing
-render_dashboard = import_or_none("dashboard_tab", "render_dashboard")
-render_crystal = import_or_none("crystal_ball_tab", "render_crystal_ball_tab")
-if render_crystal is None:
-    # backward compat if file is still named automation_tab.py
-    render_crystal = import_or_none("automation_tab", "render_automation_tab")
-
-# --- Tabs ---
-tab1, tab2 = st.tabs(["📊 Dashboard", "🔮 Crystal Ball"])
-
-with tab1:
-    if render_dashboard:
-        try:
-            render_dashboard()
-        except Exception as e:
-            st.error(f"Dashboard error: {e}")
-            st.markdown("## 📊 Capital Allocator Dashboard (fallback)")
-    else:
-        st.markdown("## 📊 Capital Allocator Dashboard (fallback)")
-
-with tab2:
-    if render_crystal:
-        try:
-            render_crystal()
-        except Exception as e:
-            st.error(f"Crystal Ball error: {e}")
-            st.info("Using stub content while we fix it.")
-            st.markdown("### 🤖 SOP stub online.")
-    else:
-        st.markdown("### 🔮 Crystal Ball")
-        st.caption("Tab is live. Add `crystal_ball_tab.py` with `render_crystal_ball_tab()` to enable features.") 
+with tabs[1]:
+    st.title("🔮 Crystal Ball")
+    st.write("Upload a stock screenshot here (next step).") 
