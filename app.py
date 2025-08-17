@@ -1,50 +1,20 @@
-# app.py
-
 import streamlit as st
-import importlib
 
-# ----- GLOBAL STYLING -----
-st.markdown(
-    """
-    <style>
-    /* Galaxy gradient background with subtle stars */
-    .stApp {
-        background: radial-gradient(circle at top left, #0b0c10, #1f2833, #0b0c10);
-        color: white;
-    }
+# (Optional) global galaxy CSS, safe to keep
+st.markdown("""
+<style>
+.stApp { background: radial-gradient(circle at top left,#0b0c10,#1f2833,#0b0c10); color: white; }
+h1 { color: white !important; } h2,h3,h4 { color: #FFD700 !important; }
+</style>
+""", unsafe_allow_html=True)
 
-    /* Star sprinkle effect */
-    .stApp::before {
-        content: "";
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: transparent url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
-        opacity: 0.2;
-        z-index: -1;
-    }
+from dashboard_tab import render_dashboard
+from automation_tab import render_automation_tab  # your 'Crystal Ball' tab
 
-    /* Make subheaders gold */
-    h2, h3, h4 {
-        color: #FFD700 !important;
-    }
+tab1, tab2 = st.tabs(["Dashboard", "🔮 Crystal Ball"])
 
-    /* Keep main big headers white for contrast */
-    h1 {
-        color: white !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+with tab1:
+    render_dashboard()
 
-# ----- NORMAL TAB LOGIC -----
-tabs = st.tabs(["Dashboard", "Crystal Ball"])
-
-with tabs[0]:
-    st.title("📊 Dashboard")
-    st.write("Your normal dashboard goes here.")
-
-with tabs[1]:
-    st.title("🔮 Crystal Ball")
-    st.write("Upload a stock screenshot here (next step).") 
+with tab2:
+    render_automation_tab() 
