@@ -63,10 +63,70 @@ def _compute_metrics(rows: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(out_rows)
 
 def render_dashboard():
-    st.header("📊 Portfolio Dashboard")
+    # safe fallback if config import ever fails
+    try:
+        from config import ALLOCATION_RULES
+        default_long = int(ALLOCATION_RULES.get("long_term_pct", 40))
+        default_swing = int(ALLOCATION_RULES.get("swing_pct", 30))
+        default_re = int(ALLOCATION_RULES.get("real_estate_pct", 30))
+    except Exception:
+        default_long, default_swing, default_re = 40, 30, 30
 
-    # ---------- Editable Portfolio Holdings ----------
-    st.subheader("💼 Portfolio Holdings")
+    # ---------- LEFT CONTROL PANEL (restored) ----------
+    col_left, col_right = st.columns([1, 2], gap="large")
+
+    with col_left:
+        st.markdown("### ⚙️ Portfolio Inputs")
+
+        monthly_income = st.number_input(
+            "Monthly Construction Income ($)",
+            min_value=0.0,
+            value=float(st.session_state.get("monthly_income", 10000.0)),
+            step=100.0,
+            format="%.2f",
+        )
+        cash_on_hand = st.number_input(
+            "Cash on Hand ($)",
+            min_value=0.0,
+            value=float(st.session_state.get("cash_on_hand", 50000.0)),
+            step=100.0,
+            format="%.2f",
+        )
+
+        st.markdown("### 🎯 Target Allocations")
+
+        long_pct = st.slider(
+            "Long-term Plays (%)", 0, 100, int(st.session_state.get("alloc_long", default_long))
+        )
+        swing_pct = st.slider(
+            "Swing Trades (%)", 0, 100, int(st.session_state.get("alloc_swing", default_swing))
+        )
+        re_pct = st.slider(
+            "Real Estate Savings (%)", 0, 100, int(st.session_state.get("alloc_re", default_re))
+        )
+
+        total_pct = long_pct + swing_pct + re_pct
+        if total_pct != 100:
+            st.warning(f"Allocations total **{total_pct}%**. Adjust to equal **100%**.")
+
+        # persist to session_state for other tabs/modules
+        st.session_state["monthly_income"] = monthly_income
+        st.session_state["cash_on_hand"] = cash_on_hand
+        st.session_state["alloc_long"] = long_pct
+        st.session_state["alloc_swing"] = swing_pct
+        st.session_state["alloc_re"] = re_pct
+
+        st.markdown("### 💰 Summary")
+        st.metric("Monthly Income", f"${monthly_income:,.0f}")
+        st.metric("Cash on Hand", f"${cash_on_hand:,.0f}")
+        st.metric("Total Capital", f"${(monthly_income + cash_on_hand):,.0f}")
+
+    # ---------- RIGHT SIDE (keep your existing holdings/results below this) ----------
+    with col_right:
+        st.markdown("### 📈 Core Holdings")
+        
+        # ---------- Editable Portfolio Holdings ----------
+        st.subheader("💼 Portfolio Holdings")
 
     if "holdings" not in st.session_state:
         st.session_state["holdings"] = _default_holdings()
